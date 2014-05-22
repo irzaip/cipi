@@ -50,4 +50,9 @@ coverage.xml
 *.pot
 
 # Sphinx documentation
+<<<<<<< HEAD
 docs/_build/
+=======
+docs/_build/
+
+>>>>>>> d73bfd8d4bc7a414a7923dfc47466ed7e4da1952
