@@ -1,0 +1,12 @@
+INSTALL FIRMATA
+
+  git clone https://github.com/tino/pyFirmata/
+  python setup.py install
+
+  or
+
+  pip install pyserial
+  pip install pyfirmata
+  
+
+
