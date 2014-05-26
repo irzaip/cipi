@@ -31,7 +31,7 @@ import mosquitto
 
 def on_connect(mosq, obj, rc):
     print "Connected"
-    mosq.subscribe("irq/teleop", 0)
+    mosq.subscribe("teleop", 0)
     print("rc: "+str(rc))
 
 def on_message(mosq, obj, msg):
@@ -57,7 +57,7 @@ mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
 #mqttc.on_log = on_log
-mqttc.connect("192.168.30.100", 1883, 60)
+mqttc.connect("192.168.30.95", 1883, 60)
 
 
 mqttc.loop_forever()

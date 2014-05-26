@@ -1,5 +1,9 @@
 import processing.opengl.*;
- 
+import se.goransson.qatja.messages.*;
+import se.goransson.qatja.*;
+
+Qatja client;
+
 /*---->>>
  Program: Joystick
  
@@ -29,7 +33,7 @@ float joyDisplayCenterY;  //Joystick displayed Center Y
  
 float surfDisplayCenterX;
 float surfDisplayCenterY;
- 
+
 float rSize;
  
 boolean isMouseTracking=false;
@@ -58,8 +62,16 @@ void setup() {
  
   //font = loadFont("Monospaced.bold-12.vlw");
   //textFont(font);
+    client = new Qatja( this );
+  
+  // 2. Request a connection to a broker. The identification
+  //    string at the end must be unique for that broker!
+  client.connect( "192.168.30.95", 1883, "irqwan" );
+  
 }
  
+void mqttCallback(MQTTPublish msg){}
+
 void draw()
 {
   float joyHorizontalText, joyVerticalText;
@@ -68,17 +80,36 @@ void draw()
  
   float dx = mouseX - joyDisplayCenterX;
   float dy = mouseY - joyDisplayCenterY;
- 
+  
   if(mousePressed && (mouseButton == LEFT))
     isMouseTracking = true;
- 
+  else
+    isMouseTracking = false;
+    
   if(mousePressed && (mouseButton == RIGHT))
     isMouseTracking = false;
+
  
   if (isMouseTracking)
   {
     curJoyAngle = atan2(dy, dx);
     curJoyRange = dist(mouseX, mouseY, joyDisplayCenterX, joyDisplayCenterY);
+    //String message = str(int(dx)) + "-" + str(int(dy));
+    String message = "";
+    if(dy < 0)
+      if(dx>0)
+        message = "1:1:" + str(abs(int(dy))) + ":" + str(int(100-dx))+":#";
+      else
+        message = "1:1:" + str(int(100-dx))+ ":" + str(abs(int(dy))) + ":" +":#";
+    else
+      if(dx>0)
+        message = "0:0:" + str(abs(int(dy))) + ":" + str(int(100-dx))+":#";
+      else
+        message = "0:0:" + str(abs(int(dy))) + ":" + str(int(100-dx))+":#";
+      
+
+    client.publish( "teleop", message);
+
   }
   else
   {
@@ -148,4 +179,9 @@ void labySurface(float angleHoriz, float angleVert)
   box(rSize, rSize, 8);
   popMatrix();
  
+}
+
+void exit() {
+  client.disconnect();
+  super.exit();
 }

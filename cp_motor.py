@@ -77,18 +77,19 @@ def processcommand(msg):
     try:
         msg = msg.split(":")
         if msg[4] == "#":
-            DIRL = msg[0]
-            DIRR = msg[1]
+            DIRL = int(msg[0])
+            DIRR = int(msg[1])
             PWML = commons.map(msg[2],0,100,0,1)
             PWMR = commons.map(msg[3],0,100,0,1)
             print "Speed" + str(PWML) + " - " +  str(PWMR)
-            if (DIRL == 1) and (DIRR == 1):
+            
+            if DIRL == 1 and DIRR == 1:
                 forward()
-            if (DIRL == 0) and (DIRR == 1):
+            if DIRL == 0 and DIRR == 1:
                 turn_left()
-            if (DIRL == 1) and (DIRR == 0):
+            if DIRL == 1 and DIRR == 0:
                 turn_right()
-            if (DIRL == 0) and (DIRR == 0):
+            if DIRL == 0 and DIRR == 0:
                 backward()
             MPWM1.write(PWMR)
             MPWM2.write(PWML)
@@ -132,12 +133,14 @@ mqttc.connect("192.168.30.100", 1883, 60)
 while True:
     mqttc.loop()
         
-    #if PWML >> 0:
-    #    PWML = PWML - 2
-    #    if PWML < 0:
-    #        PWML = 0
-    #if PWMR >> 0:
-    #    PWMR = PWMR - 2
-    #    if PWMR < 0:
-    #        PWMR = 0
+    if PWML > 0:
+        PWML = PWML - 2
+        if PWML < 0:
+            PWML = 0
+    if PWMR > 0:
+        PWMR = PWMR - 2
+        if PWMR < 0:
+            PWMR = 0
     #send the PWM
+
+board.exit()
