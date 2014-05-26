@@ -58,14 +58,14 @@ mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
 #mqttc.on_log = on_log
-mqttc.connect("test.mosquitto.org", 1883, 60)
+mqttc.connect("192.168.30.100", 1883, 60)
 
 while 1:
     mqttc.loop()
-    s = s + 1
+    s = raw_input("COMMMAND> ")
     mqttc.publish("irq/teleop",s)
     print s
-    time.sleep(2)
+    time.sleep(0.2)
     
 
 

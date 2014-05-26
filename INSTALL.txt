@@ -9,4 +9,11 @@ INSTALL FIRMATA
   pip install pyfirmata
   
 
+Install QATJA for PROCESSING
+useful for create mouse joystick with processing
+
+url https://github.com/Qatja/processing
+
+unzip at folder processing/libraries on myDocument
+
 

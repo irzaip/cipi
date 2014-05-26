@@ -9,10 +9,8 @@
 #             rear
 #
 
-
 import time
 from pyfirmata import Arduino, util
-
 
 board = Arduino('COM4')
 
@@ -47,8 +45,6 @@ def forward():
   MIN2_2.write(LOW)
   MEN2_1.write(HIGH)
   MEN2_2.write(HIGH)
-  
-
   
   
 if __name__ == '__main__':
