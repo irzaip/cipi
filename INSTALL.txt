@@ -1,3 +1,25 @@
+INSTALL MOSQUITTO
+-----------------
+
+  http://jpmens.net/2013/09/01/installing-mosquitto-on-a-raspberry-pi/
+
+
+  Step:
+    curl -O http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+    sudo apt-key add mosquitto-repo.gpg.key
+    rm mosquitto-repo.gpg.key
+    cd /etc/apt/sources.list.d/
+    sudo curl -O http://repo.mosquitto.org/debian/mosquitto-repo.list
+    sudo apt-get update
+    
+    sudo apt-get install mosquitto mosquitto-clients python-mosquitto
+
+
+    stop mosquitto:
+       sudo /etc/init.d/mosquitto stop
+
+
+
 INSTALL FIRMATA
 ---------------
   git clone https://github.com/tino/pyFirmata/
@@ -21,6 +43,39 @@ Install QATJA for PROCESSING
 INSTALL ESPEAK
 --------------
 
-   
+
+   sudo apt-get update
+   sudo apt-get upgrade
+
+   sudo apt-get install alsa-utils
+
+   - use: alsamixer 
+   for volume
+
+  edit:   
+   sudo nano /etc/modules 
+    
+    add snd_bcm2835 
+
+
   Install espeak for python
+    sudo apt-get install python-espeak
+
+  install mplayer
+      sudo apt-get install mplayer
+      sudo nano /etc/mplayer/mplayer.conf
+    add:
+      nolirc=yes
+
+INSTALL VNC
+-----------
+  https://github.com/raspberrypi/documentation/tree/master/remote-access/vnc
+
+  sudo apt-get install tightvncserver
+  tightvncserver
+  vncserver :0 -geometry 1024x768 -depth 24
+
+  client:
+   sudo apt-get install xtightvncviewer
+
 

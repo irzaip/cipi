@@ -6,7 +6,7 @@ import se.goransson.qatja.*;
 
 Qatja client;
 
-String broker = "192.168.30.95";
+String broker = "192.168.32.47";
 String message = ""; 
 String sens1 = "";
 String sens2 = "";
@@ -55,7 +55,7 @@ void setup() {
   f = loadFont( "ArialMT-16.vlw" );
   client = new Qatja( this );
   client.connect( broker, 1883, "irqwan" );
-
+  comm_mqtt = true;
 }
 
 void mqttCallback(MQTTPublish msg){}
@@ -94,7 +94,7 @@ void draw() {
   text ( warn1, 520, 693);
   text ( warn2, 520, 716);
   
-  if (client.alive()){rect(880,120,80,32);}
+  if (comm_mqtt){fill(0,200,0);rect(880,120,80,32);fill(200,0,0);}
   rect(880,200,80,32);
   rect(880,280,80,32);
   rect(880,360,80,32);
@@ -102,16 +102,10 @@ void draw() {
   rect(880,517,80,32);
   rect(880,597,80,32);
   rect(880,677,80,32);
-
-
 }
 
 // Whenever a user clicks the mouse the code written inside mousePressed() is executed.
 void mousePressed() {
-  stroke(0);
-  fill(175);
-  rectMode(CENTER);
-  rect(mouseX,mouseY,16,16);
 }
 
 void sendpub(){
@@ -124,6 +118,7 @@ void keyPressed() {
   if (voice){
     if (key == '\n'){
       saved = typing;
+      client.publish( "speak", typing );
       typing = "";
       voice = false;
       stat1 = "";
@@ -144,7 +139,7 @@ void keyPressed() {
   if (key == '9') { nav1 = "SPEED 90%"; LPWML=90;LPWMR=90;}
   if (key == '0') { nav1 = "SPEED 100%"; LPWML=100;LPWMR=100;}
   if (key == ' ') { PWML=0;PWMR=0;nav2="STOPPED";}
-  if (key == 'v') { stat1 = "VOICE MODE"; stat2 = "please type"; voice = true; }
+  if (keyCode == ENTER) { stat1 = "VOICE MODE"; stat2 = "please type"; voice = true; }
   if (key == 'q') { exit(); }
 
   if (key == CODED){
