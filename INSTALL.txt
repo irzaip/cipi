@@ -1,5 +1,5 @@
 INSTALL FIRMATA
-
+---------------
   git clone https://github.com/tino/pyFirmata/
   python setup.py install
 
@@ -10,10 +10,17 @@ INSTALL FIRMATA
   
 
 Install QATJA for PROCESSING
-useful for create mouse joystick with processing
+----------------------------
+  useful for create mouse joystick with processing
 
-url https://github.com/Qatja/processing
+  url https://github.com/Qatja/processing
 
-unzip at folder processing/libraries on myDocument
+  unzip at folder processing/libraries on myDocument
 
+
+INSTALL ESPEAK
+--------------
+
+   
+  Install espeak for python
 
