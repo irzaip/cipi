@@ -11,7 +11,7 @@ HIGH = 1
 LOW = 0
 
 
-board = Arduino('COM4')
+board = Arduino('/dev/ttyUSB0')
 
 it = util.Iterator(board)
 it.start()
@@ -100,7 +100,7 @@ def processcommand(msg):
     
 def on_connect(mosq, obj, rc):
     print "Connected"
-    mosq.subscribe("irq/teleop", 0)
+    mosq.subscribe("teleop", 0)
     print("rc: "+str(rc))
 
 def on_message(mosq, obj, msg):
@@ -128,7 +128,7 @@ mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
 #mqttc.on_log = on_log
-mqttc.connect("192.168.30.100", 1883, 60)
+mqttc.connect("192.168.32.47", 1883, 60)
 
 while True:
     mqttc.loop()
