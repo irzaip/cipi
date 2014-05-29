@@ -128,7 +128,7 @@ mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
 #mqttc.on_log = on_log
-mqttc.connect("192.168.32.47", 1883, 60)
+mqttc.connect("127.0.0.1", 1883, 60)
 
 while True:
     mqttc.loop()
