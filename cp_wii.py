@@ -18,10 +18,95 @@
 # -----------------------
 import cwiid
 import time
- 
-button_delay = 0.1
- 
+import string
+import mosquitto
+import ConfigParser
 
+config = ConfigParser.ConfigParser()
+config.read("config.ini")
+
+broker = config.get("MQTT","broker")
+port = int(config.get("MQTT","port")) 
+
+button_delay = 0.1
+
+arah = "1:1:"
+LPWM = 0
+RPWM = 0
+MAXLPWM = 30
+MAXRPWM = 30
+is_last_stop = False
+stop_count = 0
+
+
+def on_connect(mosq, obj, rc):
+  if rc==0:
+    print "Connected broker"
+  else:
+    raise Exception
+
+
+def on_publish(mosq, obj,val):
+   pass
+
+
+def sendCommand():
+  global arah
+  global LPWM
+  global RPWM
+  global is_last_stop
+  global stop_count
+  command = arah + str(LPWM) + ":" + str(RPWM) + ":#"
+  if stop_count < 3:
+    #print command
+    MQ.publish("teleop",command)
+  else:
+    pass
+  #send command
+
+
+def addPWM(l,r):
+  global LPWM
+  global RPWM
+  global MAXLPWM
+  global MAXRPWM
+  global stop_count
+  stop_count = 0
+  if LPWM < MAXLPWM:
+     LPWM = LPWM + l
+  else:
+     LPWM = MAXLPWM
+  if RPWM < MAXRPWM:
+     RPWM = RPWM + r
+  else:
+     RPWM = MAXRPWM
+  sendCommand()
+  
+def subPWM(l,r):
+  global LPWM
+  global RPWM
+  global stop_count
+  if LPWM > 0:
+    LPWM = LPWM - l
+  else:
+    LPWM = 0
+  if RPWM > 0:
+    RPWM = RPWM - r
+  else:
+    RPWM = 0
+  if LPWM == 0 and RPWM == 0:
+    stop_count = stop_count + 1
+    arah = "1:1:"
+  sendCommand()
+
+def stop():
+  global LPWM
+  global RPWM
+  global is_last_top
+  LPWM = 0
+  RPWM = 0
+  sendCommand()
+ 
 def getWii():
   try:
     print "press 1+2"
@@ -41,6 +126,10 @@ def getWii():
     time.sleep(5)
  
 def main():
+  global arah
+  global LPWM
+  global RPWM
+  global is_last_stop
 
   wii = getWii()
 
@@ -64,9 +153,12 @@ def main():
     # together then rumble and quit.
     if (buttons - cwiid.BTN_PLUS - cwiid.BTN_MINUS == 0):
       print '\nClosing connection ...'
-      wii.rumble = 1
-      time.sleep(0.1)
-      wii.rumble = 0
+      try:
+        wii.rumble = 1
+        time.sleep(0.1)
+        wii.rumble = 0
+      except:
+        pass
       try:
         wii.close()
       except:
@@ -76,57 +168,71 @@ def main():
     # Check if other buttons are pressed by
     # doing a bitwise AND of the buttons number
     # and the predefined constant for that button.
+
     if (buttons & cwiid.BTN_LEFT):
-      print 'Left pressed'
-      time.sleep(button_delay)
+      if LPWM > 0 and RPWM > 0 and arah == "1:1:":
+         addPWM(0,3)
+         subPWM(1,0)
+      else:
+        arah = "0:1:"
+        addPWM(3,3)
+      sendCommand()
  
     if(buttons & cwiid.BTN_RIGHT):
-      print 'Right pressed'
-      time.sleep(button_delay)
+      if LPWM > 0 and RPWM > 0 and arah == "1:1:":
+         addPWM(3,0)
+         subPWM(0,3)
+      else:
+         arah = "1:0:"
+         addPWM(3,3)
+      sendCommand()
  
     if (buttons & cwiid.BTN_UP):
-      print 'Up pressed'
-      time.sleep(button_delay)
+      #print 'Up pressed'
+      arah = "1:1:"
+      addPWM(3,3)
+      sendCommand()
+
  
     if (buttons & cwiid.BTN_DOWN):
-      print 'Down pressed'
-      time.sleep(button_delay)
+      arah = "0:0:"
+      addPWM(3,3)
+      sendCommand()
  
     if (buttons & cwiid.BTN_1):
       print 'Button 1 pressed'
-      time.sleep(button_delay)
  
     if (buttons & cwiid.BTN_2):
       print 'Button 2 pressed'
-      time.sleep(button_delay)
  
     if (buttons & cwiid.BTN_A):
       print 'Button A pressed'
-      time.sleep(button_delay)
  
     if (buttons & cwiid.BTN_B):
       print 'Button B pressed'
-      time.sleep(button_delay)
  
     if (buttons & cwiid.BTN_HOME):
       print 'Home Button pressed'
-      time.sleep(button_delay)
  
     if (buttons & cwiid.BTN_MINUS):
       print 'Minus Button pressed'
-      time.sleep(button_delay)
  
     if (buttons & cwiid.BTN_PLUS):
       print 'Plus Button pressed'
-      time.sleep(button_delay)
- 
-    time.sleep(0.01)
+
+
+    time.sleep(button_delay)
+    subPWM(1,1)
 
   print "DISCONECTED"
   time.sleep(3)
   getWii()
 
-if __name__ == "__main__":
-  while True:
-    main()
+MQ = mosquitto.Mosquitto("teleop")
+MQ.on_connect = on_connect
+MQ.on_publish = on_publish
+MQ.connect("localhost", port, 0)  
+while True:
+  MQ.loop()
+  main()
 

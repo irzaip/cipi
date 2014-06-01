@@ -4,36 +4,50 @@ from espeak import espeak
 import mosquitto
 from datetime import datetime
 import subprocess
+from os import listdir
+import random
+from os.path import join
 
-language = "kr"
+folder = "/home/pi/cipi/sounds/"
+files = listdir(folder)
+language = "en"
 
 def on_connect(mosq, obj, rc):
     mosq.subscribe("speak", 0)
+    mosq.subscribe("sound", 0)
     print("rc: "+str(rc))
 
 def on_message(mosq, obj, msg):
-    global language
-    #print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
-    if msg.payload == "en2":
-      language = "en2"
-      return
-    if msg.payload == "en":
-      language = "en"
-      return
-    if msg.payload == "ko":
-      language = "ko"
-      return
-    if msg.payload == "id":
-      language = "id"
-      return
-    if language == "en":
-      espeak.synth(msg.payload)
-    if language == "ko":
-      subprocess.call(["/home/pi/cipi/speech_ko.sh",msg.payload])
-    if language == "id":
-      subprocess.call(["/home/pi/cipi/speech_id.sh",msg.payload])
-    if language == "en2":
-      subprocess.call(["/home/pi/cipi/speech_en.sh",msg.payload])
+   global folder
+   global files
+   global language
+   if msg.topic == "speak":
+     #print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+     if msg.payload == "en2":
+       language = "en2"
+       return
+     if msg.payload == "en":
+       language = "en"
+       return
+     if msg.payload == "ko":
+       language = "ko"
+       return
+     if msg.payload == "id":
+       language = "id"
+       return
+     if language == "en":
+       espeak.synth(msg.payload)
+     if language == "ko":
+       subprocess.call(["/home/pi/cipi/speech_ko.sh",msg.payload])
+     if language == "id":
+       subprocess.call(["/home/pi/cipi/speech_id.sh",msg.payload])
+     if language == "en2":
+       subprocess.call(["/home/pi/cipi/speech_en.sh",msg.payload])
+   if msg.topic == "sound":
+       if msg.payload == "rnd":
+          subprocess.call(["aplay",join(folder,random.choice(files))])
+       else:
+          subprocess.call(["aplay",msg.payload])
 
 def on_publish(mosq, obj, mid):
     print("mid: "+str(mid))
