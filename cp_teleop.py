@@ -1,10 +1,11 @@
 import mosquitto
+import time
 
 a = 0
 port = 1883
 command = "1:1:0:0:#"
 
-mqtt = mosquitto.Mosquitto("teleop")
+mqtt = mosquitto.Mosquitto()
 mqtt.connect("localhost",port, 0)
 
 
@@ -19,9 +20,9 @@ while True:
    if input == "q":
       exit()
    if input == "w":
-      command = "1:1:20:20:#"
-   if input == "x":
       command = "0:0:20:20:#"
+   if input == "x":
+      command = "1:1:20:20:#"
    if input == "a":
       command = "0:1:20:20:#"
    if input == "d":
@@ -31,3 +32,4 @@ while True:
 
    mqtt.publish("teleop",command)
    a = a + 1
+   time.sleep(0.1)

@@ -93,14 +93,14 @@ def processcommand(msg):
                 backward()
             MPWM1.write(PWMR)
             MPWM2.write(PWML)
-            time.sleep(0.01)
+            time.sleep(0.02)
 
     except:
         print "Command Ignored"
     
 def on_connect(mosq, obj, rc):
     print "Connected"
-    mosq.subscribe("teleop", 0)
+    mosq.subscribe("motor", 0)
     #print("rc: "+str(rc))
 
 def on_message(mosq, obj, msg):

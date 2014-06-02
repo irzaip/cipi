@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+import commons
 from espeak import espeak
 import mosquitto
 from datetime import datetime
@@ -9,6 +9,7 @@ import random
 from os.path import join
 from twython import Twython
 import ConfigParser
+import time
 
 config = ConfigParser.ConfigParser()
 config.read("config.ini")
@@ -26,6 +27,8 @@ rndspeak = ["seenee","hai","hallo","bip bip","robot","yuhu","ea","oi","we","oh",
 folder = "/home/pi/cipi/sounds/"
 files = listdir(folder)
 language = "en"
+
+
 
 def on_connect(mosq, obj, rc):
     mosq.subscribe("speak", 0)
@@ -102,5 +105,7 @@ mqttc.connect("127.0.0.1", 1883, 60)
 #mqttc.subscribe(("tuple", 1))
 #mqttc.subscribe([("list0", 0), ("list1", 1)])
 
-mqttc.loop_forever()
+while True:
+  mqttc.loop()
+  time.sleep(0.02)
 

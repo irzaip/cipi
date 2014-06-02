@@ -33,8 +33,8 @@ button_delay = 0.1
 arah = "1:1:"
 LPWM = 0
 RPWM = 0
-MAXLPWM = 30
-MAXRPWM = 30
+MAXLPWM = 40
+MAXRPWM = 40
 is_last_stop = False
 stop_count = 0
 
@@ -59,7 +59,7 @@ def sendCommand():
   command = arah + str(LPWM) + ":" + str(RPWM) + ":#"
   if stop_count < 3:
     #print command
-    MQ.publish("teleop",command)
+    MQ.publish("wii",command)
   else:
     pass
   #send command
@@ -189,13 +189,13 @@ def main():
  
     if (buttons & cwiid.BTN_UP):
       #print 'Up pressed'
-      arah = "1:1:"
+      arah = "0:0:"
       addPWM(3,3)
       sendCommand()
 
  
     if (buttons & cwiid.BTN_DOWN):
-      arah = "0:0:"
+      arah = "1:1:"
       addPWM(3,3)
       sendCommand()
  
@@ -206,7 +206,7 @@ def main():
       MQ.publish("speak","rnd")
  
     if (buttons & cwiid.BTN_A):
-      print 'Button A pressed'
+      MQ.publish("wii","1:1:0:0:#")
  
     if (buttons & cwiid.BTN_B):
       print 'Button B pressed'
@@ -228,11 +228,10 @@ def main():
   time.sleep(3)
   getWii()
 
-MQ = mosquitto.Mosquitto("teleop")
+MQ = mosquitto.Mosquitto("wii")
 MQ.on_connect = on_connect
 MQ.on_publish = on_publish
 MQ.connect("localhost", port, 0)  
 while True:
   MQ.loop()
   main()
-

@@ -1,3 +1,4 @@
+import time
 import mosquitto
 
 port = 1883
@@ -30,7 +31,7 @@ def on_connect(mosq, msg, rc):
 
 def on_message(mosq, obj, msg):
    #print "from " + msg.topic + ":" + msg.payload
-   if msg.payload[0]=="-"
+   pass     
       
 
 def on_publish(mosq,obj,mid):
@@ -49,4 +50,5 @@ mqtt.connect("127.0.0.1",port,60)
 
 while True:
    mqtt.loop()
+   time.sleep(0.1)
 

@@ -2,19 +2,27 @@
 
 #python getip.py
 
-read -p "Press any key" var1
+#read -p "Press any key" var1
 
-#python serusb.py &
-python sser.py &
-#python cpaiml.py &
-python cpnav.py &
+python cp_motor.py&
+
+sudo /etc/init.d/bluetooth stop
+sudo hciconfig hci0 up
+
+python cp_wii.py&
+
+python cp_speak.py&
+python cp_navi.py&
+python cp_emo.py&
+
+#python cp_teleop.py
 
 sleep 6
 
-read -p "Press any key to contine" var1
+python cp_getip.py
 
-python wi2.py
-#python teleop.py
+#read -p "Press any key to continue" var1
 
 
-killall python
+
+#killall python
