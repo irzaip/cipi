@@ -81,7 +81,7 @@ def processcommand(msg):
             DIRR = int(msg[1])
             PWML = commons.map(msg[2],0,100,0,1)
             PWMR = commons.map(msg[3],0,100,0,1)
-            print "Speed" + str(PWML) + " - " +  str(PWMR)
+            #print "Speed" + str(PWML) + " - " +  str(PWMR)
             
             if DIRL == 1 and DIRR == 1:
                 forward()
@@ -101,10 +101,10 @@ def processcommand(msg):
 def on_connect(mosq, obj, rc):
     print "Connected"
     mosq.subscribe("teleop", 0)
-    print("rc: "+str(rc))
+    #print("rc: "+str(rc))
 
 def on_message(mosq, obj, msg):
-    print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+    #print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     processcommand(msg.payload)
 
 def on_publish(mosq, obj, mid):

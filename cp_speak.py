@@ -7,6 +7,21 @@ import subprocess
 from os import listdir
 import random
 from os.path import join
+from twython import Twython
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
+config.read("config.ini")
+
+CONSUMER_KEY = config.get("TWYTHON","CONSUMER_KEY")
+CONSUMER_SECRET = config.get("TWYTHON","CONSUMER_SECRET")
+ACCESS_KEY = config.get("TWYTHON","ACCESS_KEY")
+ACCESS_SECRET = config.get("TWYTHON","ACCESS_SECRET")
+
+api = Twython(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_KEY,ACCESS_SECRET) 
+
+
+rndspeak = ["seenee","hai","hallo","bip bip","robot","yuhu","ea","oi","we","oh","aah"]
 
 folder = "/home/pi/cipi/sounds/"
 files = listdir(folder)
@@ -15,12 +30,21 @@ language = "en"
 def on_connect(mosq, obj, rc):
     mosq.subscribe("speak", 0)
     mosq.subscribe("sound", 0)
+    mosq.subscribe("tweet", 0)
     print("rc: "+str(rc))
 
 def on_message(mosq, obj, msg):
    global folder
    global files
    global language
+   global api
+   if msg.topic == "tweet":
+     try:
+       api.update_status(status=str(msg.payload))
+       espeak.synth("Tweeted")
+     except:
+       espeak.synth("Tweet failed")
+     return
    if msg.topic == "speak":
      #print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
      if msg.payload == "en2":
@@ -34,6 +58,9 @@ def on_message(mosq, obj, msg):
        return
      if msg.payload == "id":
        language = "id"
+       return
+     if msg.payload == "rnd":
+       espeak.synth(random.choice(rndspeak))
        return
      if language == "en":
        espeak.synth(msg.payload)

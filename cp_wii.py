@@ -200,10 +200,10 @@ def main():
       sendCommand()
  
     if (buttons & cwiid.BTN_1):
-      print 'Button 1 pressed'
+      MQ.publish("sound","rnd")
  
     if (buttons & cwiid.BTN_2):
-      print 'Button 2 pressed'
+      MQ.publish("speak","rnd")
  
     if (buttons & cwiid.BTN_A):
       print 'Button A pressed'
