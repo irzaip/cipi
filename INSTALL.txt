@@ -1,3 +1,16 @@
+INSTALL GCALCLI
+---------------
+google calendar command line interface
+  sudo pip install google-api-python-client
+  git clone https://github.com/insanum/gcalcli
+  cd ~/gcalcli
+  sudo python setup.py install
+  sudo apt-get install python-gflags
+
+  wget https://gdata-python-client.googlecode.com/files/gdata-2.0.18.tar.gz
+  sudo python setup.py install
+
+
 INSTALL BLUETOOTH OPTIONAL
 --------------------------
 
