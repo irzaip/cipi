@@ -1,9 +1,13 @@
+
+
 // Learning Processing
 // Daniel Shiffman
 // http://www.learningprocessing.com
 import se.goransson.qatja.messages.*;
 import se.goransson.qatja.*;
 
+int time;
+int waitsend = 10;
 Qatja client;
 
 String broker = "192.168.32.47";
@@ -49,6 +53,7 @@ PFont f;
 
 // Example 3-5: mousePressed and keyPressed
 void setup() {
+  time = millis();
   size(1024,780);
   //background(255);
   img = loadImage("cipi_CC.png");
@@ -108,9 +113,22 @@ void draw() {
 void mousePressed() {
 }
 
+void reconnect(){
+  comm_mqtt = false;
+  client.disconnect();
+  client = new Qatja( this );
+  client.connect( broker, 1883, "irqwan" );
+  client.publish("speak","reconnect");
+  comm_mqtt = true;
+
+ }
+
+
 void sendpub(){
   message = str(DIRL)+":"+str(DIRR)+":"+str(PWML)+":"+str(PWMR)+":#";
-  client.publish( "teleop", message );
+  if(millis() - time >= waitsend){
+    client.publish( "teleop", message );
+    time = millis();}
 }
 
 // Whenever a user presses a key the code written inside keyPressed() is executed.
@@ -130,21 +148,26 @@ void keyPressed() {
   else {
   if (key == '1') { nav1 = "SPEED 10%"; LPWML=10;LPWMR=10;}
   if (key == '2') { nav1 = "SPEED 20%"; LPWML=20;LPWMR=20;}
-  if (key == '3') { nav1 = "SPEED 30%"; LPWML=30;LPWMR=30;}
-  if (key == '4') { nav1 = "SPEED 40%"; LPWML=40;LPWMR=40;}
-  if (key == '5') { nav1 = "SPEED 50%"; LPWML=50;LPWMR=50;}
-  if (key == '6') { nav1 = "SPEED 60%"; LPWML=60;LPWMR=60;}
-  if (key == '7') { nav1 = "SPEED 70%"; LPWML=70;LPWMR=70;}
+  if (key == '3') { nav1 = "SPEED 30%"; LPWML=25;LPWMR=25;}
+  if (key == '4') { nav1 = "SPEED 40%"; LPWML=30;LPWMR=30;}
+  if (key == '5') { nav1 = "SPEED 50%"; LPWML=35;LPWMR=35;}
+  if (key == '6') { nav1 = "SPEED 60%"; LPWML=40;LPWMR=40;}
+  if (key == '7') { nav1 = "SPEED 70%"; LPWML=50;LPWMR=50;}
   if (key == '8') { nav1 = "SPEED 80%"; LPWML=80;LPWMR=80;}
   if (key == '9') { nav1 = "SPEED 90%"; LPWML=90;LPWMR=90;}
   if (key == '0') { nav1 = "SPEED 100%"; LPWML=100;LPWMR=100;}
   if (key == ' ') { PWML=0;PWMR=0;nav2="STOPPED";}
+  if (key == '.') { client.publish("sound","rnd");}
+  if (key == 'p') { client.publish("speak","pong");}
+  if (key == 'm') { client.publish("speak","music start");}
+  if (key == ',') { client.publish("speak","music stop");}
+  if (key == 'r') { reconnect();}
   if (keyCode == ENTER) { stat1 = "VOICE MODE"; stat2 = "please type"; voice = true; }
   if (key == 'q') { exit(); }
 
   if (key == CODED){
-    if (keyCode == UP) { nav2 = "MOVE FORWARD"; DIRL=1; DIRR=1;PWML=LPWML;PWMR=LPWMR;sendpub();}
-    if (keyCode == DOWN) { nav2 = "MOVE BACKWARD"; DIRL=0; DIRR=0;PWML=LPWML;PWMR=LPWMR;sendpub();}
+    if (keyCode == UP) { nav2 = "MOVE FORWARD"; DIRL=0; DIRR=0;PWML=LPWML;PWMR=LPWMR;sendpub();}
+    if (keyCode == DOWN) { nav2 = "MOVE BACKWARD"; DIRL=1; DIRR=1;PWML=LPWML;PWMR=LPWMR;sendpub();}
     if (keyCode == LEFT) {nav2 = "TURN LEFT"; DIRL=0; DIRR=1;PWML=LPWML;PWMR=LPWMR;sendpub();}
     if (keyCode == RIGHT) {nav2 = "TURN RIGHT"; DIRL=1; DIRR=0;PWML=LPWML;PWMR=LPWMR;sendpub();}
   }}
