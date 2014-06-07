@@ -20,13 +20,13 @@ while True:
    if input == "q":
       exit()
    if input == "w":
-      command = "0:0:20:20:#"
+      command = "0:0:40:40:#"
    if input == "x":
-      command = "1:1:20:20:#"
+      command = "1:1:40:40:#"
    if input == "a":
-      command = "0:1:20:20:#"
+      command = "0:1:40:40:#"
    if input == "d":
-      command = "1:0:20:20:#"
+      command = "1:0:40:40:#"
    if input == "s":
       command = "1:1:0:0:#"
 

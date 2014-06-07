@@ -12,7 +12,6 @@ sudo hciconfig hci0 up
 python cp_wii.py&
 
 python cp_speak.py&
-python cp_navi.py&
 python cp_emo.py&
 
 #python cp_teleop.py

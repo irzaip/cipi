@@ -38,6 +38,9 @@ MAXRPWM = 40
 is_last_stop = False
 stop_count = 0
 
+menu = ["print", "music", "main", "display", "light"]
+selected_menu = "print"
+last = 0
 
 def on_connect(mosq, obj, rc):
   if rc==0:
@@ -201,9 +204,11 @@ def main():
  
     if (buttons & cwiid.BTN_1):
       MQ.publish("sound","rnd")
+      time.sleep(1)
  
     if (buttons & cwiid.BTN_2):
       MQ.publish("speak","rnd")
+      time.sleep(1)
  
     if (buttons & cwiid.BTN_A):
       MQ.publish("wii","1:1:0:0:#")
@@ -212,13 +217,22 @@ def main():
       print 'Button B pressed'
  
     if (buttons & cwiid.BTN_HOME):
-      print 'Home Button pressed'
- 
+      global last
+      global selected_menu
+      last = last + 1
+      if last == len(menu):
+         last = 0
+      selected_menu = menu[last]
+      MQ.publish("speak", str(menu[last]))
+      time.sleep(1)
+
     if (buttons & cwiid.BTN_MINUS):
-      print 'Minus Button pressed'
+      MQ.publish("speak", selected_menu+" stop")
+      time.sleep(1)
  
     if (buttons & cwiid.BTN_PLUS):
-      print 'Plus Button pressed'
+      MQ.publish("speak", selected_menu+" start")
+      time.sleep(1)
 
 
     time.sleep(button_delay)
