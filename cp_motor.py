@@ -1,4 +1,4 @@
-import mosquitto
+import paho.mqtt.client as mosquitto
 import time
 from pyfirmata import Arduino, util
 import commons
@@ -121,19 +121,20 @@ def on_log(mosq, obj, level, string):
 # mqttc = mosquitto.Mosquitto("client-id")
 # but note that the client id must be unique on the broker. Leaving the client
 # id parameter empty will generate a random id for you.
-mqttc = mosquitto.Mosquitto()
+mqttc = mosquitto.Mosquitto("motor")
 mqttc.on_message = on_message
 mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
 #mqttc.on_log = on_log
-mqttc.connect("127.0.0.1", 1883, 60)
+mqttc.connect("192.168.0.100", 1883, 60)
 mqttc.publish("speak","motor ready")
 
 while True:
     mqttc.loop()
-        
+
+    #pelan-pelan makin pelan             
     if PWML > 0:
         PWML = PWML - 2
         if PWML < 0:
