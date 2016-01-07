@@ -1,7 +1,7 @@
 MAIL_FILEPATH = '/root/to_mail.txt'
-SMTP_USERNAME = 'irzaip@gmail.com'
+SMTP_USERNAME = 'ir@gmail.com'
 SMTP_PASSWORD = ''
-SMTP_RECIPIENT = 'irzaip@gmail.com'
+SMTP_RECIPIENT = 'ir@gmail.com'
 SMTP_SERVER = 'smtp.gmail.com'
 SSL_PORT = 465
 ################################################
