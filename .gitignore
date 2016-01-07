@@ -1,4 +1,5 @@
 myconfig.py
+curr_ip.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
