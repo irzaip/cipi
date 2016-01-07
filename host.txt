@@ -1,0 +1,1 @@
+{"hosts": [{"ip": "8.8.8.8", "hostname": "INTERNET", "lastseen": 1}, {"ip": "192.168.30.100", "hostname": "GODANG", "lastseen": 8}, {"ip": "192.168.32.11", "hostname": "EDIMAX", "lastseen": 1}]}

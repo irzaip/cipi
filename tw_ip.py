@@ -11,6 +11,7 @@ from twython import Twython
 import urllib2
 import random
 
+from socmed import *
 
 try:
   f = open('oneliner.txt','r')
@@ -50,6 +51,11 @@ except:
   quit()
 
 status = oneliner + " -" + ext_ip
+
+try:
+  cipitweet(status)
+except:
+  print "Error tweeting ip address"
 
 print status
 
